@@ -17,11 +17,11 @@ void losowanie ()
         wybrane[i]=wartosci[j]; 
     }
 
-   /* for (int i=0; i<n; i++) //wypisanie tablicy wybranych
+    for (int i=0; i<n; i++) //wypisanie tablicy wybranych
     {
         char a=wybrane[i];
         printf(" %c \n", a);
-    }*/
+    }
 } // koniec f. losowanie
 
 int pobranie()
@@ -111,12 +111,46 @@ unsigned koniec(unsigned m)
     return 0;
 } // koniec f. koniec
 
+void ranking(int razy) // dopisywane do pliku
+{
+    FILE *ranking;
+    if((ranking = fopen("ranking.txt", "a"))==NULL) // otwarcie pliku
+    {
+        printf("Blad zapisu wyniku \n");
+        exit(1);
+    }
+    fprintf(ranking, "\n %d", razy); // zapisanie wyniku w pliku
+    fclose(ranking); //zamyka plik
+}// koniec f. ranking
+
+int wynik() // zwraca najlepszy wynik w rankingu
+{
+    FILE *wyniki;
+    wyniki = fopen("ranking.txt", "r");
+    int tab[1000];
+    int a=0;
+
+    while(fscanf(wyniki,"%d", &tab[a])==1)
+    a++;
+
+    int min=tab[0];
+    for(int i=0; i<a; i++)
+    {
+        if(min>tab[i])
+        min=tab[i];
+    }
+    fclose(wyniki);
+
+    return min;
+}// koniec f. wynik
+
 int gra()
 {
     losowanie();
     
     int stop=0;
     int miejsce=0;
+    int razy=0;
     
     while(stop==0)
     {    
@@ -130,7 +164,12 @@ int gra()
       
     miejsce=sprawdzanie();
     stop=koniec(miejsce);
+    razy++;
     }
     
-    printf("BRAWO! KONIEC GRY \n");
+    printf("BRAWO! KONIEC GRY! UDALO CI SIE W -- %d -- PROBACH! \n", razy);
+    
+    ranking(razy);
+    int min = wynik();
+    printf("Najlepszy wynik to -- %d -- \n", min);
 }
