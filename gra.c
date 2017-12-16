@@ -5,7 +5,7 @@
 #define n 5
 char wybrane[n];
 char proba[n+1];
-char wartosci[5]={'R', 'B', 'Y', 'G', 'C'};
+char wartosci[5]={'q', 'w', 'e', 'a', 's'};
 
 void losowanie ()
 {
@@ -17,21 +17,17 @@ void losowanie ()
         wybrane[i]=wartosci[j]; 
     }
 
-    for (int i=0; i<n; i++) //wypisanie tablicy wybranych
+   /* for (int i=0; i<n; i++) //wypisanie tablicy wybranych
     {
         char a=wybrane[i];
         printf(" %c \n", a);
-    }
+    }*/
 } // koniec f. losowanie
 
 int pobranie()
 {
-    for(int i=0; i<n+1; i++) // pobranie strzalow do tablicy
-    {
-        char a=0;
-        scanf("%c", &a);
-        proba[i]=a;
-    }
+    scanf("%5s", proba);
+    while((getchar())!='\n');
 
     /*for (int j=0; j<n; j++ ) // wypisanie zawartosci tablicy proba
     {
@@ -111,38 +107,66 @@ unsigned koniec(unsigned m)
     return 0;
 } // koniec f. koniec
 
-void ranking(int razy) // dopisywane do pliku
+void dodawanie(int wynik, char nick[]) // dodawanie wyniku 
 {
     FILE *ranking;
-    if((ranking = fopen("ranking.txt", "a"))==NULL) // otwarcie pliku
-    {
-        printf("Blad zapisu wyniku \n");
-        exit(1);
-    }
-    fprintf(ranking, "\n %d", razy); // zapisanie wyniku w pliku
-    fclose(ranking); //zamyka plik
-}// koniec f. ranking
+    ranking=fopen("ranking.txt", "a");
 
-int wynik() // zwraca najlepszy wynik w rankingu
+    fprintf(ranking, "\n%d %s", wynik, nick);
+    fclose(ranking);
+    return;
+}// koniec f. dodawanie
+
+struct rank //struktura rankingu
 {
-    FILE *wyniki;
-    wyniki = fopen("ranking.txt", "r");
-    int tab[1000];
-    int a=0;
+    int wynik;
+    char nick[25];
+};
 
-    while(fscanf(wyniki,"%d", &tab[a])==1)
+typedef char NICK[25]; 
+
+int sortowanie() //sortowanie rankingu
+{
+    struct rank pozycja[100];
+
+    FILE *rank;
+    rank=fopen("ranking.txt", "r");
+
+    int a=0;
+    while(fscanf(rank, "%d %s", &pozycja[a].wynik, pozycja[a].nick)==2)
     a++;
 
-    int min=tab[0];
-    for(int i=0; i<a; i++)
+    int k;
+    for (k=a-1; k>0; k--)
     {
-        if(min>tab[i])
-        min=tab[i];
-    }
-    fclose(wyniki);
+        for(int j=0; j<k; j++)
+        {
+            if(pozycja[j].wynik>pozycja[j+1].wynik)
+            {
+                int temp = pozycja[j].wynik;
+                pozycja[j].wynik=pozycja[j+1].wynik;
+                pozycja[j+1].wynik=temp;
 
-    return min;
-}// koniec f. wynik
+                NICK zam;
+                strcpy(zam, pozycja[j].nick);
+                strcpy( pozycja[j].nick, pozycja[j+1].nick);
+                strcpy(pozycja[j+1].nick, zam);
+            }
+        }
+    }//koniec f. sortowanie
+
+    int i;
+    for(i=0; i<a; i++)
+    {
+        printf("%d %s\n", pozycja[i].wynik, pozycja[i].nick);
+    }
+    return 0;
+}
+
+int tabelka(struct rank pozycja[])
+{
+
+}
 
 int gra()
 {
@@ -161,15 +185,27 @@ int gra()
             pobranie();
             poprawne=poprawnosc();
         }    
-      
+
     miejsce=sprawdzanie();
     stop=koniec(miejsce);
     razy++;
+    printf("\n");
     }
     
     printf("BRAWO! KONIEC GRY! UDALO CI SIE W -- %d -- PROBACH! \n", razy);
     
-    ranking(razy);
-    int min = wynik();
-    printf("Najlepszy wynik to -- %d -- \n", min);
+    char nick[25];
+    printf("Podaj nick do zapisania wyniku: ");
+    scanf("%25s", nick);
+
+    dodawanie(razy, nick);
+
+    int r=0;
+    printf("Chcesz zobaczyc ranking, podaj 1: ");
+    scanf ("%d", &r);
+    if(r==1)
+    sortowanie();
+    else
+    exit(0);
+    return 0;
 }

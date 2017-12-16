@@ -4,7 +4,7 @@ void gra();
 int main()
 {
     printf("MASTER MIND - gra polega na odgadnięciu szyfru. \n \
-     Masz do dyspozycji 5 znaków: R, B, Y, G, C \n \
+     Masz do dyspozycji 5 znaków: q, w, e, a, s \n \
      znaki mogą się powtarzać \n \
      podawanych znakow nie oddzielaj spacja, koncz ruch ENTER \n \
      po każdej probie bedziesz informowany: \n \
