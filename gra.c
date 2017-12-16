@@ -165,7 +165,6 @@ int sortowanie() //sortowanie rankingu
 
 int tabelka(struct rank pozycja[])
 {
-
 }
 
 int gra()
