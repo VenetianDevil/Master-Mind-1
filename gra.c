@@ -22,7 +22,7 @@ void losowanie ()
         char a=wybrane[i];
         printf(" %c \n", a);
     }*/
-} // koniec f. losowanie
+ }// koniec f. losowanie
 
 int pobranie()
 {
@@ -79,21 +79,39 @@ unsigned sprawdzanie()
         }
     }
 
+    char dopasowane[m];
     int c=0;
     int a=0;
+    int d=0;
     for(int i=0; i<m; i++) // petla wybiera wyraz do sprawdzania z pozostalych z proba[]
     {
         int b=0;   
         a=pozostale[i]; // wybranie indeksu do sprawdzania
-        for(int j=0; j<m; j++)
+        int j=0;
+    while(b==0 && j<m)
+    {   
+        c=pozostale[j];
+        if(proba[a]==wybrane[c])
         {   
-            c=pozostale[j];
-            if(proba[a]==wybrane[c])
             b=1;
+            if(d>0)
+            {
+                for(int k=0; k<d; k++)
+                {
+                    if(c==dopasowane[k])
+                    b=0;
+                }
+            }
+            if(b==1)
+            {
+                dopasowane[d]=c;
+                d++;
+            }
         }
+        j++;
         traf+=b;
     }
-
+    }
     printf("MIEJSCE: %d; TRAF: %d \n", miejsce, traf);
 
  return miejsce;
@@ -155,16 +173,15 @@ int sortowanie() //sortowanie rankingu
         }
     }//koniec f. sortowanie
 
+    printf("|%-5s|%-25s|\n", "wynik", "nick");
+    printf("=================================\n");
+
     int i;
     for(i=0; i<a; i++)
     {
-        printf("%d %s\n", pozycja[i].wynik, pozycja[i].nick);
+        printf("|%-5d|%-25s|\n", pozycja[i].wynik, pozycja[i].nick);
     }
     return 0;
-}
-
-int tabelka(struct rank pozycja[])
-{
 }
 
 int gra()
@@ -202,6 +219,7 @@ int gra()
     int r=0;
     printf("Chcesz zobaczyc ranking, podaj 1: ");
     scanf ("%d", &r);
+    printf("\n");
     if(r==1)
     sortowanie();
     else
