@@ -26,7 +26,7 @@ void losowanie ()
 
 int pobranie()
 {
-    scanf("%5s", proba);
+    scanf("%5s", proba); // pobranie pierwszych pieciu znakow do proba[]
     while((getchar())!='\n');
 
     /*for (int j=0; j<n; j++ ) // wypisanie zawartosci tablicy proba
@@ -86,25 +86,25 @@ unsigned sprawdzanie()
     for(int i=0; i<m; i++) // petla wybiera wyraz do sprawdzania z pozostalych z proba[]
     {
         int b=0;   
-        a=pozostale[i]; // wybranie indeksu do sprawdzania
+        a=pozostale[i]; // wybranie indeksu do sprawdzania z proby[a]
         int j=0;
-    while(b==0 && j<m)
+    while(b==0 && j<m) // sprawdzanie albo az zostanie przyporzadkowany, albo jak przejdzie prze wszystkie i nie bedzie trafu
     {   
         c=pozostale[j];
-        if(proba[a]==wybrane[c])
+        if(proba[a]==wybrane[c]) //porownanie z elementem wybrane[c]
         {   
-            b=1;
-            if(d>0)
+            b=1; // jeśli jest traf
+            if(d>0) // jesli jakies elementy zostaly oznaczone jako dopasowane TRAF
             {
-                for(int k=0; k<d; k++)
+                for(int k=0; k<d; k++) // sprawdzenie czy nie zostal dopasowany ponownie do tego samego elementu
                 {
                     if(c==dopasowane[k])
-                    b=0;
+                    b=0; // jesli tak, to nie zostaje on liczony jako TRAF
                 }
             }
-            if(b==1)
+            if(b==1) //jesli jest do nowe dopasowanie
             {
-                dopasowane[d]=c;
+                dopasowane[d]=c;// zapisujemy indeks do juz dopasowanych elementow
                 d++;
             }
         }
@@ -130,7 +130,7 @@ void dodawanie(int wynik, char nick[]) // dodawanie wyniku
     FILE *ranking;
     ranking=fopen("ranking.txt", "a");
 
-    fprintf(ranking, "\n%d %s", wynik, nick);
+    fprintf(ranking, "\n%d %s", wynik, nick); //dopisanie wyniku do pliku
     fclose(ranking);
     return;
 }// koniec f. dodawanie
@@ -148,18 +148,18 @@ int sortowanie() //sortowanie rankingu
     struct rank pozycja[100];
 
     FILE *rank;
-    rank=fopen("ranking.txt", "r");
+    rank=fopen("ranking.txt", "r"); // otwarcie pliku z wynikami
 
     int a=0;
-    while(fscanf(rank, "%d %s", &pozycja[a].wynik, pozycja[a].nick)==2)
+    while(fscanf(rank, "%d %s", &pozycja[a].wynik, pozycja[a].nick)==2) //wczytanie danych z pliku
     a++;
 
     int k;
-    for (k=a-1; k>0; k--)
+    for (k=a-1; k>0; k--) //sortowanie danych wzgledem wyniku
     {
         for(int j=0; j<k; j++)
         {
-            if(pozycja[j].wynik>pozycja[j+1].wynik)
+            if(pozycja[j].wynik>pozycja[j+1].wynik) // porownywanie i ewentualna zamiana wyniku wraz z graczem
             {
                 int temp = pozycja[j].wynik;
                 pozycja[j].wynik=pozycja[j+1].wynik;
@@ -171,18 +171,18 @@ int sortowanie() //sortowanie rankingu
                 strcpy(pozycja[j+1].nick, zam);
             }
         }
-    }//koniec f. sortowanie
+    }
 
-    printf("|%-5s|%-25s|\n", "wynik", "nick");
+    printf("|%5s | %-25s|\n", "wynik", "nick");
     printf("=================================\n");
 
     int i;
-    for(i=0; i<a; i++)
+    for(i=0; i<a; i++) // wypisanie rankingu w tabelce
     {
-        printf("|%-5d|%-25s|\n", pozycja[i].wynik, pozycja[i].nick);
+        printf("|%5d | %-25s|\n", pozycja[i].wynik, pozycja[i].nick);
     }
     return 0;
-}
+}// koniec f. sortowanie
 
 int gra()
 {
